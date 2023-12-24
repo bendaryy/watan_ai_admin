@@ -16,9 +16,9 @@ use App\Http\Controllers\UsersController;
 
 Route::get('/', function () {
     return view('shared.home.home');
-})->name('home');
+})->name('home')->middleware('auth');
 
-Route::get('users',[UsersController::class,'index'])->name('users');
+Route::get('users',[UsersController::class,'index'])->name('users')->middleware('auth');
 
 
 
@@ -29,5 +29,5 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
-    })->name('dashboard');
+    })->name('dashboard')->middleware('auth');
 });
