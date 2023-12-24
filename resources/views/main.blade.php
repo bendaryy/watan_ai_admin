@@ -2493,7 +2493,7 @@
 
 
     <!-- start footer section -->
-    @include('shared.footer')
+    {{-- @include('shared.footer') --}}
     <!-- end footer section -->
     </div>
 
