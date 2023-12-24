@@ -1,887 +1,784 @@
 @extends('main')
 
 @section('content')
-    <div class="animate__animated p-6" :class="[$store.app.animation]">
-        <!-- start main content section -->
-        <div x-data="sales">
-            <ul class="flex space-x-2 rtl:space-x-reverse">
-                <li>
-                    <a href="javascript:;" class="text-primary hover:underline">Dashboard</a>
-                </li>
-                <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-                    <span>Sales</span>
-                </li>
-            </ul>
-
-            <div class="pt-5">
-                <div class="mb-6 grid gap-6 xl:grid-cols-3">
-                    <div class="panel h-full xl:col-span-2">
-                        <div class="mb-5 flex items-center dark:text-white-light">
-                            <h5 class="text-lg font-semibold">Revenue</h5>
-                            <div x-data="dropdown" @click.outside="open = false"
-                                class="dropdown ltr:ml-auto rtl:mr-auto">
-                                <a href="javascript:;" @click="toggle">
-                                    <svg class="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
-                                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="5" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle cx="19" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                    </svg>
-                                </a>
-                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                    class="ltr:right-0 rtl:left-0">
-                                    <li><a href="javascript:;" @click="toggle">Weekly</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Monthly</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Yearly</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <p class="text-lg dark:text-white-light/90">Total Profit <span
-                                class="ml-2 text-primary">$10,840</span></p>
-                        <div class="relative overflow-hidden">
-                            <div x-ref="revenueChart" class="rounded-lg bg-white dark:bg-black">
-                                <!-- loader -->
-                                <div
-                                    class="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                    <span
-                                        class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel h-full">
-                        <div class="mb-5 flex items-center">
-                            <h5 class="text-lg font-semibold dark:text-white-light">Sales By Category</h5>
-                        </div>
-                        <div class="overflow-hidden">
-                            <div x-ref="salesByCategory" class="rounded-lg bg-white dark:bg-black">
-                                <!-- loader -->
-                                <div
-                                    class="grid min-h-[353px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                    <span
-                                        class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                    <div class="panel h-full sm:col-span-2 xl:col-span-1">
-                        <div class="mb-5 flex items-center">
-                            <h5 class="text-lg font-semibold dark:text-white-light">
-                                Daily Sales <span class="block text-sm font-normal text-white-dark">Go to columns for
-                                    details.</span>
-                            </h5>
-                            <div class="relative ltr:ml-auto rtl:mr-auto">
-                                <div
-                                    class="grid h-11 w-11 place-content-center rounded-full bg-[#ffeccb] text-warning dark:bg-warning dark:text-[#ffeccb]">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 6V18" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" />
-                                        <path
-                                            d="M15 9.5C15 8.11929 13.6569 7 12 7C10.3431 7 9 8.11929 9 9.5C9 10.8807 10.3431 12 12 12C13.6569 12 15 13.1193 15 14.5C15 15.8807 13.6569 17 12 17C10.3431 17 9 15.8807 9 14.5"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="overflow-hidden">
-                            <div x-ref="dailySales" class="rounded-lg bg-white dark:bg-black">
-                                <!-- loader -->
-                                <div
-                                    class="grid min-h-[175px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                    <span
-                                        class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel h-full">
-                        <div class="mb-5 flex items-center dark:text-white-light">
-                            <h5 class="text-lg font-semibold">Summary</h5>
-                            <div x-data="dropdown" @click.outside="open = false"
-                                class="dropdown ltr:ml-auto rtl:mr-auto">
-                                <a href="javascript:;" @click="toggle">
-                                    <svg class="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
-                                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="5" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle cx="19" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                    </svg>
-                                </a>
-                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                    class="ltr:right-0 rtl:left-0">
-                                    <li><a href="javascript:;" @click="toggle">View Report</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Mark as Done</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="space-y-9">
-                            <div class="flex items-center">
-                                <div class="h-9 w-9 ltr:mr-3 rtl:ml-3">
-                                    <div
-                                        class="grid h-9 w-9 place-content-center rounded-full bg-secondary-light text-secondary dark:bg-secondary dark:text-secondary-light">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
+      <div class="animate__animated p-6" :class="[$store.app.animation]">
+                    <div x-data="finance">
+                        <ul class="flex space-x-2 rtl:space-x-reverse">
+                            <li>
+                                <a href="javascript:;" class="text-primary hover:underline">Dashboard</a>
+                            </li>
+                            <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
+                                <span>Finance</span>
+                            </li>
+                        </ul>
+                        <div class="pt-5">
+                            <div class="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
+                                <!-- Users Visit -->
+                                <div class="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
+                                    <div class="flex justify-between">
+                                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Users Visit</div>
+                                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                            <a href="javascript:;" @click="toggle">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                >
+                                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                </svg>
+                                            </a>
+                                            <ul
+                                                x-cloak
+                                                x-show="open"
+                                                x-transition
+                                                x-transition.duration.300ms
+                                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark"
+                                            >
+                                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 flex items-center">
+                                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">$170.46</div>
+                                        <div class="badge bg-white/30">+ 2.35%</div>
+                                    </div>
+                                    <div class="mt-5 flex items-center font-semibold">
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2"
+                                        >
                                             <path
-                                                d="M3.74157 18.5545C4.94119 20 7.17389 20 11.6393 20H12.3605C16.8259 20 19.0586 20 20.2582 18.5545M3.74157 18.5545C2.54194 17.1091 2.9534 14.9146 3.77633 10.5257C4.36155 7.40452 4.65416 5.84393 5.76506 4.92196M3.74157 18.5545C3.74156 18.5545 3.74157 18.5545 3.74157 18.5545ZM20.2582 18.5545C21.4578 17.1091 21.0464 14.9146 20.2235 10.5257C19.6382 7.40452 19.3456 5.84393 18.2347 4.92196M20.2582 18.5545C20.2582 18.5545 20.2582 18.5545 20.2582 18.5545ZM18.2347 4.92196C17.1238 4 15.5361 4 12.3605 4H11.6393C8.46374 4 6.87596 4 5.76506 4.92196M18.2347 4.92196C18.2347 4.92196 18.2347 4.92196 18.2347 4.92196ZM5.76506 4.92196C5.76506 4.92196 5.76506 4.92196 5.76506 4.92196Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path opacity="0.5"
-                                                d="M9.1709 8C9.58273 9.16519 10.694 10 12.0002 10C13.3064 10 14.4177 9.16519 14.8295 8"
-                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                opacity="0.5"
+                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                            <path
+                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
                                         </svg>
+                                        Last Week 44,700
                                     </div>
                                 </div>
-                                <div class="flex-1">
-                                    <div class="mb-2 flex font-semibold text-white-dark">
-                                        <h6>Income</h6>
-                                        <p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
+
+                                <!-- Sessions -->
+                                <div class="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                                    <div class="flex justify-between">
+                                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Sessions</div>
+                                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                            <a href="javascript:;" @click="toggle">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                >
+                                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                </svg>
+                                            </a>
+                                            <ul
+                                                x-cloak
+                                                x-show="open"
+                                                x-transition
+                                                x-transition.duration.300ms
+                                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark"
+                                            >
+                                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div class="h-2 rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
-                                        <div
-                                            class="h-full w-11/12 rounded-full bg-gradient-to-r from-[#7579ff] to-[#b224ef]">
+                                    <div class="mt-5 flex items-center">
+                                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">74,137</div>
+                                        <div class="badge bg-white/30">- 2.35%</div>
+                                    </div>
+                                    <div class="mt-5 flex items-center font-semibold">
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2"
+                                        >
+                                            <path
+                                                opacity="0.5"
+                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                            <path
+                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                        </svg>
+                                        Last Week 84,709
+                                    </div>
+                                </div>
+
+                                <!-- Time On-Site -->
+                                <div class="panel bg-gradient-to-r from-blue-500 to-blue-400">
+                                    <div class="flex justify-between">
+                                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Time On-Site</div>
+                                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                            <a href="javascript:;" @click="toggle">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                >
+                                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                </svg>
+                                            </a>
+                                            <ul
+                                                x-cloak
+                                                x-show="open"
+                                                x-transition
+                                                x-transition.duration.300ms
+                                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark"
+                                            >
+                                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 flex items-center">
+                                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">38,085</div>
+                                        <div class="badge bg-white/30">+ 1.35%</div>
+                                    </div>
+                                    <div class="mt-5 flex items-center font-semibold">
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2"
+                                        >
+                                            <path
+                                                opacity="0.5"
+                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                            <path
+                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                        </svg>
+                                        Last Week 37,894
+                                    </div>
+                                </div>
+
+                                <!-- Bounce Rate -->
+                                <div class="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
+                                    <div class="flex justify-between">
+                                        <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Bounce Rate</div>
+                                        <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                            <a href="javascript:;" @click="toggle">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                >
+                                                    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                </svg>
+                                            </a>
+                                            <ul
+                                                x-cloak
+                                                x-show="open"
+                                                x-transition
+                                                x-transition.duration.300ms
+                                                class="text-black ltr:right-0 rtl:left-0 dark:text-white-dark"
+                                            >
+                                                <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 flex items-center">
+                                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">49.10%</div>
+                                        <div class="badge bg-white/30">- 0.35%</div>
+                                    </div>
+                                    <div class="mt-5 flex items-center font-semibold">
+                                        <svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2"
+                                        >
+                                            <path
+                                                opacity="0.5"
+                                                d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                            <path
+                                                d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                stroke="currentColor"
+                                                stroke-width="1.5"
+                                            ></path>
+                                        </svg>
+                                        Last Week 50.01%
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                <!-- Favorites -->
+                                <div>
+                                    <div class="mb-5 flex items-center font-bold">
+                                        <span class="text-lg">Favorites</span>
+                                        <a href="javascript:;" class="text-primary hover:text-black ltr:ml-auto rtl:mr-auto dark:hover:text-white-dark">
+                                            See All
+                                        </a>
+                                    </div>
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:mb-5">
+                                        <!-- Bitcoin -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        xml:space="preserve"
+                                                        width="100%"
+                                                        height="100%"
+                                                        version="1.1"
+                                                        shape-rendering="geometricPrecision"
+                                                        text-rendering="geometricPrecision"
+                                                        image-rendering="optimizeQuality"
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        viewBox="0 0 4091.27 4091.73"
+                                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                        xmlns:xodm="http://www.corel.com/coreldraw/odm/2003"
+                                                    >
+                                                        <g id="Layer_x0020_1">
+                                                            <metadata id="CorelCorpID_0Corel-Layer" />
+                                                            <g id="_1421344023328">
+                                                                <path
+                                                                    fill="#F7931A"
+                                                                    fill-rule="nonzero"
+                                                                    d="M4030.06 2540.77c-273.24,1096.01 -1383.32,1763.02 -2479.46,1489.71 -1095.68,-273.24 -1762.69,-1383.39 -1489.33,-2479.31 273.12,-1096.13 1383.2,-1763.19 2479,-1489.95 1096.06,273.24 1763.03,1383.51 1489.76,2479.57l0.02 -0.02z"
+                                                                />
+                                                                <path
+                                                                    fill="white"
+                                                                    fill-rule="nonzero"
+                                                                    d="M2947.77 1754.38c40.72,-272.26 -166.56,-418.61 -450,-516.24l91.95 -368.8 -224.5 -55.94 -89.51 359.09c-59.02,-14.72 -119.63,-28.59 -179.87,-42.34l90.16 -361.46 -224.36 -55.94 -92 368.68c-48.84,-11.12 -96.81,-22.11 -143.35,-33.69l0.26 -1.16 -309.59 -77.31 -59.72 239.78c0,0 166.56,38.18 163.05,40.53 90.91,22.69 107.35,82.87 104.62,130.57l-104.74 420.15c6.26,1.59 14.38,3.89 23.34,7.49 -7.49,-1.86 -15.46,-3.89 -23.73,-5.87l-146.81 588.57c-11.11,27.62 -39.31,69.07 -102.87,53.33 2.25,3.26 -163.17,-40.72 -163.17,-40.72l-111.46 256.98 292.15 72.83c54.35,13.63 107.61,27.89 160.06,41.3l-92.9 373.03 224.24 55.94 92 -369.07c61.26,16.63 120.71,31.97 178.91,46.43l-91.69 367.33 224.51 55.94 92.89 -372.33c382.82,72.45 670.67,43.24 791.83,-303.02 97.63,-278.78 -4.86,-439.58 -206.26,-544.44 146.69,-33.83 257.18,-130.31 286.64,-329.61l-0.07 -0.05zm-512.93 719.26c-69.38,278.78 -538.76,128.08 -690.94,90.29l123.28 -494.2c152.17,37.99 640.17,113.17 567.67,403.91zm69.43 -723.3c-63.29,253.58 -453.96,124.75 -580.69,93.16l111.77 -448.21c126.73,31.59 534.85,90.55 468.94,355.05l-0.02 0z"
+                                                                />
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">BTC</h6>
+                                                    <p class="text-xs text-white-dark">Bitcoin</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden">
+                                                <div x-ref="bitcoin"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $20,000 <span class="text-sm font-normal text-success">+0.25%</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Ethereum -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full bg-warning p-2">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        xml:space="preserve"
+                                                        width="100%"
+                                                        height="100%"
+                                                        version="1.1"
+                                                        shape-rendering="geometricPrecision"
+                                                        text-rendering="geometricPrecision"
+                                                        image-rendering="optimizeQuality"
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        viewBox="0 0 784.37 1277.39"
+                                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                        xmlns:xodm="http://www.corel.com/coreldraw/odm/2003"
+                                                    >
+                                                        <g id="Layer_x0020_1">
+                                                            <metadata id="CorelCorpID_0Corel-Layer" />
+                                                            <g id="_1421394342400">
+                                                                <g>
+                                                                    <polygon
+                                                                        fill="#343434"
+                                                                        fill-rule="nonzero"
+                                                                        points="392.07,0 383.5,29.11 383.5,873.74 392.07,882.29 784.13,650.54 "
+                                                                    />
+                                                                    <polygon
+                                                                        fill="#8C8C8C"
+                                                                        fill-rule="nonzero"
+                                                                        points="392.07,0 -0,650.54 392.07,882.29 392.07,472.33 "
+                                                                    />
+                                                                    <polygon
+                                                                        fill="#3C3C3B"
+                                                                        fill-rule="nonzero"
+                                                                        points="392.07,956.52 387.24,962.41 387.24,1263.28 392.07,1277.38 784.37,724.89 "
+                                                                    />
+                                                                    <polygon
+                                                                        fill="#8C8C8C"
+                                                                        fill-rule="nonzero"
+                                                                        points="392.07,1277.38 392.07,956.52 -0,724.89 "
+                                                                    />
+                                                                    <polygon
+                                                                        fill="#141414"
+                                                                        fill-rule="nonzero"
+                                                                        points="392.07,882.29 784.13,650.54 392.07,472.33 "
+                                                                    />
+                                                                    <polygon
+                                                                        fill="#393939"
+                                                                        fill-rule="nonzero"
+                                                                        points="0,650.54 392.07,882.29 392.07,472.33 "
+                                                                    />
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">ETH</h6>
+                                                    <p class="text-xs text-white-dark">Ethereum</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden">
+                                                <div x-ref="ethereum"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $21,000 <span class="text-sm font-normal text-danger">-1.25%</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Litecoin -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0.847 0.876 329.254 329.256">
+                                                        <title>Litecoin</title>
+                                                        <path
+                                                            d="M330.102 165.503c0 90.922-73.705 164.629-164.626 164.629C74.554 330.132.848 256.425.848 165.503.848 74.582 74.554.876 165.476.876c90.92 0 164.626 73.706 164.626 164.627"
+                                                            fill="#345d9d"
+                                                        />
+                                                        <path
+                                                            d="M295.15 165.505c0 71.613-58.057 129.675-129.674 129.675-71.616 0-129.677-58.062-129.677-129.675 0-71.619 58.061-129.677 129.677-129.677 71.618 0 129.674 58.057 129.674 129.677"
+                                                            fill="#345d9d"
+                                                        />
+                                                        <path
+                                                            d="M155.854 209.482l10.693-40.264 25.316-9.249 6.297-23.663-.215-.587-24.92 9.104 17.955-67.608h-50.921l-23.481 88.23-19.605 7.162-6.478 24.395 19.59-7.156-13.839 51.998h135.521l8.688-32.362h-84.601"
+                                                            fill="#fff"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">LTC</h6>
+                                                    <p class="text-xs text-white-dark">Litecoin</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden">
+                                                <div x-ref="litecoin"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $11,657 <span class="text-sm font-normal text-success">+0.25%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Live Prices -->
+                                <div>
+                                    <div class="mb-5 flex items-center font-bold">
+                                        <span class="text-lg">Live Prices</span>
+                                        <a href="javascript:;" class="text-primary hover:text-black ltr:ml-auto rtl:mr-auto dark:hover:text-white-dark">
+                                            See All
+                                        </a>
+                                    </div>
+                                    <div class="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+                                        <!-- Binance -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full">
+                                                    <svg width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                                        <g id="Icon">
+                                                            <circle cx="512" cy="512" r="512" style="fill: #f3ba2f" />
+                                                            <path
+                                                                class="st1 fill-white"
+                                                                d="M404.9 468 512 360.9l107.1 107.2 62.3-62.3L512 236.3 342.6 405.7z"
+                                                            />
+                                                            <path
+                                                                transform="rotate(-45.001 298.629 511.998)"
+                                                                class="st1 fill-white"
+                                                                d="M254.6 467.9h88.1V556h-88.1z"
+                                                            />
+                                                            <path
+                                                                class="st1 fill-white"
+                                                                d="M404.9 556 512 663.1l107.1-107.2 62.4 62.3h-.1L512 787.7 342.6 618.3l-.1-.1z"
+                                                            />
+                                                            <path
+                                                                transform="rotate(-45.001 725.364 512.032)"
+                                                                class="st1 fill-white"
+                                                                d="M681.3 468h88.1v88.1h-88.1z"
+                                                            />
+                                                            <path
+                                                                class="st1 fill-white"
+                                                                d="M575.2 512 512 448.7l-46.7 46.8-5.4 5.3-11.1 11.1-.1.1.1.1 63.2 63.2 63.2-63.3z"
+                                                            />
+                                                        </g>
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">BNB</h6>
+                                                    <p class="text-xs text-white-dark">Binance</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden5">
+                                                <div x-ref="binance"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $21,000 <span class="text-sm font-normal text-danger">-1.25%</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tether -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 2000 2000">
+                                                        <path
+                                                            d="M1000,0c552.26,0,1000,447.74,1000,1000S1552.24,2000,1000,2000,0,1552.38,0,1000,447.68,0,1000,0"
+                                                            fill="#53ae94"
+                                                        />
+                                                        <path
+                                                            d="M1123.42,866.76V718H1463.6V491.34H537.28V718H877.5V866.64C601,879.34,393.1,934.1,393.1,999.7s208,120.36,484.4,133.14v476.5h246V1132.8c276-12.74,483.48-67.46,483.48-133s-207.48-120.26-483.48-133m0,225.64v-0.12c-6.94.44-42.6,2.58-122,2.58-63.48,0-108.14-1.8-123.88-2.62v0.2C633.34,1081.66,451,1039.12,451,988.22S633.36,894.84,877.62,884V1050.1c16,1.1,61.76,3.8,124.92,3.8,75.86,0,114-3.16,121-3.8V884c243.8,10.86,425.72,53.44,425.72,104.16s-182,93.32-425.72,104.18"
+                                                            fill="#fff"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">USDT</h6>
+                                                    <p class="text-xs text-white-dark">Tether</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden">
+                                                <div x-ref="tether"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $20,000 <span class="text-sm font-normal text-success">+0.25%</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Solana -->
+                                        <div class="panel">
+                                            <div class="mb-5 flex items-center font-semibold">
+                                                <div class="grid h-10 w-10 shrink-0 place-content-center rounded-full bg-warning p-2">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                        width="100%"
+                                                        height="100%"
+                                                        viewBox="0 0 508.07 398.17"
+                                                    >
+                                                        <defs>
+                                                            <linearGradient
+                                                                id="linear-gradient"
+                                                                x1="463"
+                                                                y1="205.16"
+                                                                x2="182.39"
+                                                                y2="742.62"
+                                                                gradientTransform="translate(0 -198)"
+                                                                gradientUnits="userSpaceOnUse"
+                                                            >
+                                                                <stop offset="0" stop-color="#00ffa3" />
+                                                                <stop offset="1" stop-color="#dc1fff" />
+                                                            </linearGradient>
+                                                            <linearGradient
+                                                                id="linear-gradient-2"
+                                                                x1="340.31"
+                                                                y1="141.1"
+                                                                x2="59.71"
+                                                                y2="678.57"
+                                                                xlink:href="#linear-gradient"
+                                                            />
+                                                            <linearGradient
+                                                                id="linear-gradient-3"
+                                                                x1="401.26"
+                                                                y1="172.92"
+                                                                x2="120.66"
+                                                                y2="710.39"
+                                                                xlink:href="#linear-gradient"
+                                                            />
+                                                        </defs>
+                                                        <path
+                                                            class="cls-1 fill-[url(#linear-gradient)]"
+                                                            d="M84.53,358.89A16.63,16.63,0,0,1,96.28,354H501.73a8.3,8.3,0,0,1,5.87,14.18l-80.09,80.09a16.61,16.61,0,0,1-11.75,4.86H10.31A8.31,8.31,0,0,1,4.43,439Z"
+                                                            transform="translate(-1.98 -55)"
+                                                        />
+                                                        <path
+                                                            class="cls-2 fill-[url(#linear-gradient)]"
+                                                            d="M84.53,59.85A17.08,17.08,0,0,1,96.28,55H501.73a8.3,8.3,0,0,1,5.87,14.18l-80.09,80.09a16.61,16.61,0,0,1-11.75,4.86H10.31A8.31,8.31,0,0,1,4.43,140Z"
+                                                            transform="translate(-1.98 -55)"
+                                                        />
+                                                        <path
+                                                            class="cls-3 fill-[url(#linear-gradient)]"
+                                                            d="M427.51,208.42a16.61,16.61,0,0,0-11.75-4.86H10.31a8.31,8.31,0,0,0-5.88,14.18l80.1,80.09a16.6,16.6,0,0,0,11.75,4.86H501.73a8.3,8.3,0,0,0,5.87-14.18Z"
+                                                            transform="translate(-1.98 -55)"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div class="ltr:ml-2 rtl:mr-2">
+                                                    <h6 class="text-dark dark:text-white-light">SOL</h6>
+                                                    <p class="text-xs text-white-dark">Solana</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5 overflow-hidden">
+                                                <div x-ref="solana"></div>
+                                            </div>
+                                            <div class="flex items-center justify-between text-base font-bold">
+                                                $21,000 <span class="text-sm font-normal text-danger">-1.25%</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center">
-                                <div class="h-9 w-9 ltr:mr-3 rtl:ml-3">
-                                    <div
-                                        class="grid h-9 w-9 place-content-center rounded-full bg-success-light text-success dark:bg-success dark:text-success-light">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M4.72848 16.1369C3.18295 14.5914 2.41018 13.8186 2.12264 12.816C1.83509 11.8134 2.08083 10.7485 2.57231 8.61875L2.85574 7.39057C3.26922 5.59881 3.47597 4.70292 4.08944 4.08944C4.70292 3.47597 5.59881 3.26922 7.39057 2.85574L8.61875 2.57231C10.7485 2.08083 11.8134 1.83509 12.816 2.12264C13.8186 2.41018 14.5914 3.18295 16.1369 4.72848L17.9665 6.55812C20.6555 9.24711 22 10.5916 22 12.2623C22 13.933 20.6555 15.2775 17.9665 17.9665C15.2775 20.6555 13.933 22 12.2623 22C10.5916 22 9.24711 20.6555 6.55812 17.9665L4.72848 16.1369Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <circle opacity="0.5" cx="8.60699" cy="8.87891" r="2"
-                                                transform="rotate(-45 8.60699 8.87891)" stroke="currentColor"
-                                                stroke-width="1.5" />
-                                            <path opacity="0.5" d="M11.5417 18.5L18.5208 11.5208" stroke="currentColor"
-                                                stroke-width="1.5" stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="mb-2 flex font-semibold text-white-dark">
-                                        <h6>Profit</h6>
-                                        <p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
-                                    </div>
-                                    <div class="h-2 w-full rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
-                                        <div class="h-full w-full rounded-full bg-gradient-to-r from-[#3cba92] to-[#0ba360]"
-                                            style="width: 65%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="h-9 w-9 ltr:mr-3 rtl:ml-3">
-                                    <div
-                                        class="grid h-9 w-9 place-content-center rounded-full bg-warning-light text-warning dark:bg-warning dark:text-warning-light">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path opacity="0.5" d="M10 16H6" stroke="currentColor" stroke-width="1.5"
-                                                stroke-linecap="round" />
-                                            <path opacity="0.5" d="M14 16H12.5" stroke="currentColor" stroke-width="1.5"
-                                                stroke-linecap="round" />
-                                            <path opacity="0.5" d="M2 10L22 10" stroke="currentColor" stroke-width="1.5"
-                                                stroke-linecap="round" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="mb-2 flex font-semibold text-white-dark">
-                                        <h6>Expenses</h6>
-                                        <p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
-                                    </div>
-                                    <div class="h-2 w-full rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
-                                        <div class="h-full w-full rounded-full bg-gradient-to-r from-[#f09819] to-[#ff5858]"
-                                            style="width: 80%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="panel h-full p-0">
-                        <div class="absolute flex w-full items-center justify-between p-5">
-                            <div class="relative">
-                                <div
-                                    class="flex h-11 w-11 items-center justify-center rounded-lg bg-success-light text-success dark:bg-success dark:text-success-light">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M2 3L2.26491 3.0883C3.58495 3.52832 4.24497 3.74832 4.62248 4.2721C5 4.79587 5 5.49159 5 6.88304V9.5C5 12.3284 5 13.7426 5.87868 14.6213C6.75736 15.5 8.17157 15.5 11 15.5H19"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                        <path opacity="0.5"
-                                            d="M7.5 18C8.32843 18 9 18.6716 9 19.5C9 20.3284 8.32843 21 7.5 21C6.67157 21 6 20.3284 6 19.5C6 18.6716 6.67157 18 7.5 18Z"
-                                            stroke="currentColor" stroke-width="1.5" />
-                                        <path opacity="0.5"
-                                            d="M16.5 18.0001C17.3284 18.0001 18 18.6716 18 19.5001C18 20.3285 17.3284 21.0001 16.5 21.0001C15.6716 21.0001 15 20.3285 15 19.5001C15 18.6716 15.6716 18.0001 16.5 18.0001Z"
-                                            stroke="currentColor" stroke-width="1.5" />
-                                        <path opacity="0.5" d="M11 9H8" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" />
-                                        <path
-                                            d="M5 6H16.4504C18.5054 6 19.5328 6 19.9775 6.67426C20.4221 7.34853 20.0173 8.29294 19.2078 10.1818L18.7792 11.1818C18.4013 12.0636 18.2123 12.5045 17.8366 12.7523C17.4609 13 16.9812 13 16.0218 13H5"
-                                            stroke="currentColor" stroke-width="1.5" />
-                                    </svg>
+                            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                                <div class="grid gap-6 xl:grid-flow-row">
+                                    <!-- Previous Statement -->
+                                    <div class="panel overflow-hidden">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="text-lg font-bold">Previous Statement</div>
+                                                <div class="text-success">Paid on June 27, 2022</div>
+                                            </div>
+                                            <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                                <a href="javascript:;" @click="toggle">
+                                                    <svg
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                    >
+                                                        <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                        <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    </svg>
+                                                </a>
+                                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0">
+                                                    <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                    <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="relative mt-10">
+                                            <div class="absolute -bottom-12 h-24 w-24 ltr:-right-12 rtl:-left-12">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-full w-full text-success opacity-20"
+                                                >
+                                                    <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                                                    <path
+                                                        d="M8.5 12.5L10.5 14.5L15.5 9.5"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
+                                                <div>
+                                                    <div class="text-primary">Card Limit</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$50,000.00</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-primary">Spent</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$15,000.00</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-primary">Minimum</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$2,500.00</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Current Statement -->
+                                    <div class="panel overflow-hidden">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="text-lg font-bold">Current Statement</div>
+                                                <div class="text-danger">Must be paid before July 27, 2022</div>
+                                            </div>
+                                            <div x-data="dropdown" @click.outside="open = false" class="dropdown">
+                                                <a href="javascript:;" @click="toggle">
+                                                    <svg
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5 opacity-70 hover:opacity-80"
+                                                    >
+                                                        <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                        <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5" />
+                                                    </svg>
+                                                </a>
+                                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms class="ltr:right-0 rtl:left-0">
+                                                    <li><a href="javascript:;" @click="toggle">View Report</a></li>
+                                                    <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="relative mt-10">
+                                            <div class="absolute -bottom-12 h-24 w-24 ltr:-right-12 rtl:-left-12">
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-full w-24 text-danger opacity-20"
+                                                >
+                                                    <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                                                    <path d="M12 7V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                                    <circle cx="12" cy="16" r="1" fill="currentColor" />
+                                                </svg>
+                                            </div>
+
+                                            <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
+                                                <div>
+                                                    <div class="text-primary">Card Limit</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$50,000.00</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-primary">Spent</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$30,500.00</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-primary">Minimum</div>
+                                                    <div class="mt-2 text-2xl font-semibold">$8,000.00</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <h5 class="text-2xl font-semibold ltr:text-right rtl:text-left dark:text-white-light">
-                                3,192
-                                <span class="block text-sm font-normal">Total Orders</span>
-                            </h5>
-                        </div>
-                        <div x-ref="totalOrders" class="overflow-hidden rounded-lg bg-transparent">
-                            <!-- loader -->
-                            <div
-                                class="grid min-h-[290px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08]">
-                                <span
-                                    class="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-black !border-l-transparent dark:border-white"></span>
+
+                                <!-- Recent Transactions -->
+                                <div class="panel">
+                                    <div class="mb-5 text-lg font-bold">Recent Transactions</div>
+                                    <div class="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th class="ltr:rounded-l-md rtl:rounded-r-md">ID</th>
+                                                    <th>DATE</th>
+                                                    <th>NAME</th>
+                                                    <th>AMOUNT</th>
+                                                    <th class="text-center ltr:rounded-r-md rtl:rounded-l-md">STATUS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="font-semibold">#01</td>
+                                                    <td class="whitespace-nowrap">Oct 08, 2021</td>
+                                                    <td class="whitespace-nowrap">Eric Page</td>
+                                                    <td>$1,358.75</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-semibold">#02</td>
+                                                    <td class="whitespace-nowrap">Dec 18, 2021</td>
+                                                    <td class="whitespace-nowrap">Nita Parr</td>
+                                                    <td>-$1,042.82</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-semibold">#03</td>
+                                                    <td class="whitespace-nowrap">Dec 25, 2021</td>
+                                                    <td class="whitespace-nowrap">Carl Bell</td>
+                                                    <td>$1,828.16</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-danger/20 text-danger hover:top-0">Pending</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-semibold">#04</td>
+                                                    <td class="whitespace-nowrap">Nov 29, 2021</td>
+                                                    <td class="whitespace-nowrap">Dan Hart</td>
+                                                    <td>$1,647.55</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-semibold">#05</td>
+                                                    <td class="whitespace-nowrap">Nov 24, 2021</td>
+                                                    <td class="whitespace-nowrap">Jake Ross</td>
+                                                    <td>$927.43</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-semibold">#06</td>
+                                                    <td class="whitespace-nowrap">Jan 26, 2022</td>
+                                                    <td class="whitespace-nowrap">Anna Bell</td>
+                                                    <td>$250.00</td>
+                                                    <td class="text-center">
+                                                        <span class="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                    <div class="panel h-full pb-0 sm:col-span-2 xl:col-span-1">
-                        <h5 class="mb-5 text-lg font-semibold dark:text-white-light">Recent Activities</h5>
-
-                        <div class="perfect-scrollbar relative -mr-3 mb-4 h-[290px] pr-3">
-                            <div class="cursor-pointer text-sm">
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-primary ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Updated Server Logs</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">Just
-                                        Now</div>
-
-                                    <span
-                                        class="badge badge-outline-primary absolute bg-primary-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-success ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Send Mail to HR and Admin</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">2 min
-                                        ago</div>
-
-                                    <span
-                                        class="badge badge-outline-success absolute bg-success-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-danger ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Backup Files EOD</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">14:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-danger absolute bg-danger-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-black ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Collect documents from Sara</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">16:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-dark absolute bg-dark-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-warning ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Conference call with Marketing Manager.</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">17:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-warning absolute bg-warning-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">In
-                                        progress</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-info ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Rebooted Server</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">17:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-info absolute bg-info-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-secondary ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Send contract details to Freelancer</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">18:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-secondary absolute bg-secondary-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-primary ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Updated Server Logs</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">Just
-                                        Now</div>
-
-                                    <span
-                                        class="badge badge-outline-primary absolute bg-primary-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-success ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Send Mail to HR and Admin</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">2 min
-                                        ago</div>
-
-                                    <span
-                                        class="badge badge-outline-success absolute bg-success-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-danger ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Backup Files EOD</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">14:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-danger absolute bg-danger-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-black ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Collect documents from Sara</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">16:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-dark absolute bg-dark-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-warning ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Conference call with Marketing Manager.</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">17:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-warning absolute bg-warning-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">In
-                                        progress</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-info ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Rebooted Server</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">17:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-info absolute bg-info-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Completed</span>
-                                </div>
-                                <div class="group relative flex items-center py-1.5">
-                                    <div class="h-1.5 w-1.5 rounded-full bg-secondary ltr:mr-1 rtl:ml-1.5"></div>
-                                    <div class="flex-1">Send contract details to Freelancer</div>
-                                    <div class="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">18:00
-                                    </div>
-
-                                    <span
-                                        class="badge badge-outline-secondary absolute bg-secondary-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-[#0e1726]">Pending</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border-t border-white-light dark:border-white/10">
-                            <a href="javascript:;"
-                                class="group group flex items-center justify-center p-4 font-semibold hover:text-primary">
-                                View All
-                                <svg class="h-4 w-4 transition duration-300 group-hover:translate-x-1 ltr:ml-1 rtl:mr-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="panel h-full">
-                        <div class="mb-5 flex items-center justify-between dark:text-white-light">
-                            <h5 class="text-lg font-semibold">Transactions</h5>
-                            <div x-data="dropdown" @click.outside="open = false" class="dropdown">
-                                <a href="javascript:;" @click="toggle">
-                                    <svg class="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
-                                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="5" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                        <circle cx="19" cy="12" r="2" stroke="currentColor"
-                                            stroke-width="1.5" />
-                                    </svg>
-                                </a>
-                                <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                    class="ltr:right-0 rtl:left-0">
-                                    <li><a href="javascript:;" @click="toggle">View Report</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Edit Report</a></li>
-                                    <li><a href="javascript:;" @click="toggle">Mark as Done</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="space-y-6">
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-success-light text-base text-success dark:bg-success dark:text-success-light">SP</span>
-                                    <div class="flex-1 px-3">
-                                        <div>Shaun Park</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">10 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-success ltr:ml-auto rtl:mr-auto">+$36.11</span>
-                                </div>
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-warning-light text-warning dark:bg-warning dark:text-warning-light">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg" class="h-6 w-6">
-                                            <path
-                                                d="M2 10C2 7.17157 2 5.75736 2.87868 4.87868C3.75736 4 5.17157 4 8 4H13C15.8284 4 17.2426 4 18.1213 4.87868C19 5.75736 19 7.17157 19 10C19 12.8284 19 14.2426 18.1213 15.1213C17.2426 16 15.8284 16 13 16H8C5.17157 16 3.75736 16 2.87868 15.1213C2 14.2426 2 12.8284 2 10Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path opacity="0.5"
-                                                d="M19.0003 7.07617C19.9754 7.17208 20.6317 7.38885 21.1216 7.87873C22.0003 8.75741 22.0003 10.1716 22.0003 13.0001C22.0003 15.8285 22.0003 17.2427 21.1216 18.1214C20.2429 19.0001 18.8287 19.0001 16.0003 19.0001H11.0003C8.17187 19.0001 6.75766 19.0001 5.87898 18.1214C5.38909 17.6315 5.17233 16.9751 5.07642 16"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path
-                                                d="M13 10C13 11.3807 11.8807 12.5 10.5 12.5C9.11929 12.5 8 11.3807 8 10C8 8.61929 9.11929 7.5 10.5 7.5C11.8807 7.5 13 8.61929 13 10Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path opacity="0.5" d="M16 12L16 8" stroke="currentColor" stroke-width="1.5"
-                                                stroke-linecap="round" />
-                                            <path opacity="0.5" d="M5 12L5 8" stroke="currentColor" stroke-width="1.5"
-                                                stroke-linecap="round" />
-                                        </svg>
-                                    </span>
-                                    <div class="flex-1 px-3">
-                                        <div>Cash withdrawal</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">04 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-danger ltr:ml-auto rtl:mr-auto">-$16.44</span>
-                                </div>
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-danger-light text-danger dark:bg-danger dark:text-danger-light">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="12" cy="6" r="4" stroke="currentColor"
-                                                stroke-width="1.5" />
-                                            <path opacity="0.5"
-                                                d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                        </svg>
-                                    </span>
-                                    <div class="flex-1 px-3">
-                                        <div>Amy Diaz</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">10 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-success ltr:ml-auto rtl:mr-auto">+$66.44</span>
-                                </div>
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-secondary-light text-secondary dark:bg-secondary dark:text-secondary-light">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
-                                            preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596c2.344.058 4.85.398 4.854.398c-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.86-.004-15.913.002-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z" />
-                                        </svg>
-                                    </span>
-                                    <div class="flex-1 px-3">
-                                        <div>Netflix</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">04 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-danger ltr:ml-auto rtl:mr-auto">-$32.00</span>
-                                </div>
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-info-light text-base text-info dark:bg-info dark:text-info-light">DA</span>
-                                    <div class="flex-1 px-3">
-                                        <div>Daisy Anderson</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">10 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-success ltr:ml-auto rtl:mr-auto">+$10.08</span>
-                                </div>
-                                <div class="flex">
-                                    <span
-                                        class="grid h-9 w-9 shrink-0 place-content-center rounded-md bg-primary-light text-primary dark:bg-primary dark:text-primary-light">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M13.926 9.70541C13.5474 9.33386 13.5474 8.74151 13.5474 7.55682V7.24712C13.5474 3.96249 13.5474 2.32018 12.6241 2.03721C11.7007 1.75425 10.711 3.09327 8.73167 5.77133L5.66953 9.91436C4.3848 11.6526 3.74244 12.5217 4.09639 13.205C4.10225 13.2164 4.10829 13.2276 4.1145 13.2387C4.48945 13.9117 5.59888 13.9117 7.81775 13.9117C9.05079 13.9117 9.6673 13.9117 10.054 14.2754"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                            <path opacity="0.5"
-                                                d="M13.9259 9.70557L13.9459 9.72481C14.3326 10.0885 14.9492 10.0885 16.1822 10.0885C18.4011 10.0885 19.5105 10.0885 19.8854 10.7615C19.8917 10.7726 19.8977 10.7838 19.9036 10.7951C20.2575 11.4785 19.6151 12.3476 18.3304 14.0858L15.2682 18.2288C13.2888 20.9069 12.2991 22.2459 11.3758 21.9629C10.4524 21.68 10.4524 20.0376 10.4525 16.753L10.4525 16.4434C10.4525 15.2587 10.4525 14.6663 10.074 14.2948L10.054 14.2755"
-                                                stroke="currentColor" stroke-width="1.5" />
-                                        </svg>
-                                    </span>
-                                    <div class="flex-1 px-3">
-                                        <div>Electricity Bill</div>
-                                        <div class="text-xs text-white-dark dark:text-gray-500">04 Jan 1:00PM</div>
-                                    </div>
-                                    <span
-                                        class="whitespace-pre px-1 text-base text-danger ltr:ml-auto rtl:mr-auto">-$22.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel h-full overflow-hidden border-0 p-0">
-                        <div class="min-h-[190px] bg-gradient-to-r from-[#4361ee] to-[#160f6b] p-6">
-                            <div class="mb-6 flex items-center justify-between">
-                                <div
-                                    class="flex items-center rounded-full bg-black/50 p-1 font-semibold text-white ltr:pr-3 rtl:pl-3">
-                                    <img class="block h-8 w-8 rounded-full border-2 border-white/50 object-cover ltr:mr-1 rtl:ml-1"
-                                        src="assets/images/profile-34.jpeg" alt="image" />
-                                    Alan Green
-                                </div>
-                                <button type="button"
-                                    class="flex h-9 w-9 items-center justify-between rounded-md bg-black text-white hover:opacity-80 ltr:ml-auto rtl:mr-auto">
-                                    <svg class="m-auto h-6 w-6" viewBox="0 0 24 24" stroke="currentColor"
-                                        stroke-width="1.5" fill="none" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between text-white">
-                                <p class="text-xl">Wallet Balance</p>
-                                <h5 class="text-2xl ltr:ml-auto rtl:mr-auto"><span class="text-white-light">$</span>2953
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="-mt-12 grid grid-cols-2 gap-2 px-8">
-                            <div class="rounded-md bg-white px-4 py-2.5 shadow dark:bg-[#060818]">
-                                <span class="mb-4 flex items-center justify-between dark:text-white">Received
-                                    <svg class="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 15L12 9L5 15" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                                <div
-                                    class="btn w-full border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">
-                                    $97.99
-                                </div>
-                            </div>
-                            <div class="rounded-md bg-white px-4 py-2.5 shadow dark:bg-[#060818]">
-                                <span class="mb-4 flex items-center justify-between dark:text-white">Spent
-                                    <svg class="h-4 w-4 text-danger" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 9L12 15L5 9" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                                <div
-                                    class="btn w-full border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">
-                                    $53.00
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="mb-5">
-                                <span
-                                    class="rounded-full bg-[#1b2e4b] px-4 py-1.5 text-xs text-white before:inline-block before:h-1.5 before:w-1.5 before:rounded-full before:bg-white ltr:before:mr-2 rtl:before:ml-2">Pending</span>
-                            </div>
-                            <div class="mb-5 space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <p class="font-semibold text-[#515365]">Netflix</p>
-                                    <p class="text-base"><span>$</span> <span class="font-semibold">13.85</span></p>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <p class="font-semibold text-[#515365]">BlueHost VPN</p>
-                                    <p class="text-base"><span>$</span> <span class="font-semibold">15.66</span></p>
-                                </div>
-                            </div>
-                            <div class="flex justify-around px-2 text-center">
-                                <button type="button" class="btn btn-secondary ltr:mr-2 rtl:ml-2">View Details</button>
-                                <button type="button" class="btn btn-success">Pay Now $29.51</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    <div class="panel h-full w-full">
-                        <div class="mb-5 flex items-center justify-between">
-                            <h5 class="text-lg font-semibold dark:text-white-light">Recent Orders</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="ltr:rounded-l-md rtl:rounded-r-md">Customer</th>
-                                        <th>Product</th>
-                                        <th>Invoice</th>
-                                        <th>Price</th>
-                                        <th class="ltr:rounded-r-md rtl:rounded-l-md">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="min-w-[150px] text-black dark:text-white">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/profile-6.jpeg" alt="avatar" />
-                                                <span class="whitespace-nowrap">Luke Ivory</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-primary">Headphone</td>
-                                        <td><a href="apps-invoice-preview.html">#46894</a></td>
-                                        <td>$56.07</td>
-                                        <td><span
-                                                class="badge bg-success shadow-md dark:group-hover:bg-transparent">Paid</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/profile-7.jpeg" alt="avatar" />
-                                                <span class="whitespace-nowrap">Andy King</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-info">Nike Sport</td>
-                                        <td><a href="apps-invoice-preview.html">#76894</a></td>
-                                        <td>$126.04</td>
-                                        <td><span
-                                                class="badge bg-secondary shadow-md dark:group-hover:bg-transparent">Shipped</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/profile-8.jpeg" alt="avatar" />
-                                                <span class="whitespace-nowrap">Laurie Fox</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-warning">Sunglasses</td>
-                                        <td><a href="apps-invoice-preview.html">#66894</a></td>
-                                        <td>$56.07</td>
-                                        <td><span
-                                                class="badge bg-success shadow-md dark:group-hover:bg-transparent">Paid</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/profile-9.jpeg" alt="avatar" />
-                                                <span class="whitespace-nowrap">Ryan Collins</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-danger">Sport</td>
-                                        <td><a href="apps-invoice-preview.html">#75844</a></td>
-                                        <td>$110.00</td>
-                                        <td><span
-                                                class="badge bg-secondary shadow-md dark:group-hover:bg-transparent">Shipped</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex items-center">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/profile-10.jpeg" alt="avatar" />
-                                                <span class="whitespace-nowrap">Irene Collins</span>
-                                            </div>
-                                        </td>
-                                        <td class="text-secondary">Speakers</td>
-                                        <td><a href="apps-invoice-preview.html">#46894</a></td>
-                                        <td>$56.07</td>
-                                        <td><span
-                                                class="badge bg-success shadow-md dark:group-hover:bg-transparent">Paid</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="panel h-full w-full">
-                        <div class="mb-5 flex items-center justify-between">
-                            <h5 class="text-lg font-semibold dark:text-white-light">Top Selling Product</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr class="border-b-0">
-                                        <th class="ltr:rounded-l-md rtl:rounded-r-md">Product</th>
-                                        <th>Price</th>
-                                        <th>Discount</th>
-                                        <th>Sold</th>
-                                        <th class="ltr:rounded-r-md rtl:rounded-l-md">Source</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="min-w-[150px] text-black dark:text-white">
-                                            <div class="flex">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/product-headphones.jpg" alt="avatar" />
-                                                <p class="whitespace-nowrap">Headphone <span
-                                                        class="block text-xs text-primary">Digital</span></p>
-                                            </div>
-                                        </td>
-                                        <td>$168.09</td>
-                                        <td>$60.09</td>
-                                        <td>170</td>
-                                        <td>
-                                            <a class="flex items-center text-danger" href="javascript:;">
-                                                <svg class="h-3.5 w-3.5 ltr:mr-1 rtl:ml-1 rtl:rotate-180"
-                                                    viewBox="0 0 24 24" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M12.6644 5.47875L16.6367 9.00968C18.2053 10.404 18.9896 11.1012 18.9896 11.9993C18.9896 12.8975 18.2053 13.5946 16.6367 14.989L12.6644 18.5199C11.9484 19.1563 11.5903 19.4746 11.2952 19.342C11 19.2095 11 18.7305 11 17.7725V15.4279C7.4 15.4279 3.5 17.1422 2 19.9993C2 10.8565 7.33333 8.57075 11 8.57075V6.22616C11 5.26817 11 4.78917 11.2952 4.65662C11.5903 4.52407 11.9484 4.8423 12.6644 5.47875Z"
-                                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path opacity="0.5"
-                                                        d="M15.5386 4.5L20.7548 9.34362C21.5489 10.081 22.0001 11.1158 22.0001 12.1994C22.0001 13.3418 21.4989 14.4266 20.629 15.1671L15.5386 19.5"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" />
-                                                </svg>
-
-                                                Direct
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/product-shoes.jpg" alt="avatar" />
-                                                <p class="whitespace-nowrap">Shoes <span
-                                                        class="block text-xs text-warning">Faishon</span></p>
-                                            </div>
-                                        </td>
-                                        <td>$126.04</td>
-                                        <td>$47.09</td>
-                                        <td>130</td>
-                                        <td>
-                                            <a class="flex items-center text-success" href="javascript:;">
-                                                <svg class="h-3.5 w-3.5 ltr:mr-1 rtl:ml-1 rtl:rotate-180"
-                                                    viewBox="0 0 24 24" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M12.6644 5.47875L16.6367 9.00968C18.2053 10.404 18.9896 11.1012 18.9896 11.9993C18.9896 12.8975 18.2053 13.5946 16.6367 14.989L12.6644 18.5199C11.9484 19.1563 11.5903 19.4746 11.2952 19.342C11 19.2095 11 18.7305 11 17.7725V15.4279C7.4 15.4279 3.5 17.1422 2 19.9993C2 10.8565 7.33333 8.57075 11 8.57075V6.22616C11 5.26817 11 4.78917 11.2952 4.65662C11.5903 4.52407 11.9484 4.8423 12.6644 5.47875Z"
-                                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path opacity="0.5"
-                                                        d="M15.5386 4.5L20.7548 9.34362C21.5489 10.081 22.0001 11.1158 22.0001 12.1994C22.0001 13.3418 21.4989 14.4266 20.629 15.1671L15.5386 19.5"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" />
-                                                </svg>
-                                                Google
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/product-watch.jpg" alt="avatar" />
-                                                <p class="whitespace-nowrap">Watch <span
-                                                        class="block text-xs text-danger">Accessories</span></p>
-                                            </div>
-                                        </td>
-                                        <td>$56.07</td>
-                                        <td>$20.00</td>
-                                        <td>66</td>
-                                        <td>
-                                            <a class="flex items-center text-warning" href="javascript:;">
-                                                <svg class="h-3.5 w-3.5 ltr:mr-1 rtl:ml-1 rtl:rotate-180"
-                                                    viewBox="0 0 24 24" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M12.6644 5.47875L16.6367 9.00968C18.2053 10.404 18.9896 11.1012 18.9896 11.9993C18.9896 12.8975 18.2053 13.5946 16.6367 14.989L12.6644 18.5199C11.9484 19.1563 11.5903 19.4746 11.2952 19.342C11 19.2095 11 18.7305 11 17.7725V15.4279C7.4 15.4279 3.5 17.1422 2 19.9993C2 10.8565 7.33333 8.57075 11 8.57075V6.22616C11 5.26817 11 4.78917 11.2952 4.65662C11.5903 4.52407 11.9484 4.8423 12.6644 5.47875Z"
-                                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path opacity="0.5"
-                                                        d="M15.5386 4.5L20.7548 9.34362C21.5489 10.081 22.0001 11.1158 22.0001 12.1994C22.0001 13.3418 21.4989 14.4266 20.629 15.1671L15.5386 19.5"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" />
-                                                </svg>
-                                                Ads
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/product-laptop.jpg" alt="avatar" />
-                                                <p class="whitespace-nowrap">Laptop <span
-                                                        class="block text-xs text-primary">Digital</span></p>
-                                            </div>
-                                        </td>
-                                        <td>$110.00</td>
-                                        <td>$33.00</td>
-                                        <td>35</td>
-                                        <td>
-                                            <a class="flex items-center text-secondary" href="javascript:;">
-                                                <svg class="h-3.5 w-3.5 ltr:mr-1 rtl:ml-1 rtl:rotate-180"
-                                                    viewBox="0 0 24 24" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M12.6644 5.47875L16.6367 9.00968C18.2053 10.404 18.9896 11.1012 18.9896 11.9993C18.9896 12.8975 18.2053 13.5946 16.6367 14.989L12.6644 18.5199C11.9484 19.1563 11.5903 19.4746 11.2952 19.342C11 19.2095 11 18.7305 11 17.7725V15.4279C7.4 15.4279 3.5 17.1422 2 19.9993C2 10.8565 7.33333 8.57075 11 8.57075V6.22616C11 5.26817 11 4.78917 11.2952 4.65662C11.5903 4.52407 11.9484 4.8423 12.6644 5.47875Z"
-                                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path opacity="0.5"
-                                                        d="M15.5386 4.5L20.7548 9.34362C21.5489 10.081 22.0001 11.1158 22.0001 12.1994C22.0001 13.3418 21.4989 14.4266 20.629 15.1671L15.5386 19.5"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" />
-                                                </svg>
-                                                Email
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr class="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                        <td class="text-black dark:text-white">
-                                            <div class="flex">
-                                                <img class="h-8 w-8 rounded-md object-cover ltr:mr-3 rtl:ml-3"
-                                                    src="assets/images/product-camera.jpg" alt="avatar" />
-                                                <p class="whitespace-nowrap">Camera <span
-                                                        class="block text-xs text-primary">Digital</span></p>
-                                            </div>
-                                        </td>
-                                        <td>$56.07</td>
-                                        <td>$26.04</td>
-                                        <td>30</td>
-                                        <td>
-                                            <a class="flex items-center text-primary" href="javascript:;">
-                                                <svg class="h-3.5 w-3.5 ltr:mr-1 rtl:ml-1 rtl:rotate-180"
-                                                    viewBox="0 0 24 24" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M12.6644 5.47875L16.6367 9.00968C18.2053 10.404 18.9896 11.1012 18.9896 11.9993C18.9896 12.8975 18.2053 13.5946 16.6367 14.989L12.6644 18.5199C11.9484 19.1563 11.5903 19.4746 11.2952 19.342C11 19.2095 11 18.7305 11 17.7725V15.4279C7.4 15.4279 3.5 17.1422 2 19.9993C2 10.8565 7.33333 8.57075 11 8.57075V6.22616C11 5.26817 11 4.78917 11.2952 4.65662C11.5903 4.52407 11.9484 4.8423 12.6644 5.47875Z"
-                                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                    <path opacity="0.5"
-                                                        d="M15.5386 4.5L20.7548 9.34362C21.5489 10.081 22.0001 11.1158 22.0001 12.1994C22.0001 13.3418 21.4989 14.4266 20.629 15.1671L15.5386 19.5"
-                                                        stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" />
-                                                </svg>
-                                                Referral
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end main content section -->
-    </div>
 @endsection
