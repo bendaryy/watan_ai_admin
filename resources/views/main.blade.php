@@ -376,8 +376,8 @@
                         <a href="index-2.html" class="main-logo flex shrink-0 items-center">
                             <img class="ml-[5px] w-8 flex-none" src="{{ asset('assets/images/noor2.png') }}"
                                 alt="image" style="height:30px;width:100px" />
-                            <span
-                                class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">Noor</span>
+                            {{-- <span
+                                class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">Noor</span> --}}
                         </a>
                         <a href="javascript:;"
                             class="collapse-icon flex h-8 w-8 items-center rounded-full transition duration-300 hover:bg-gray-500/10 rtl:rotate-180 dark:text-white-light dark:hover:bg-dark-light/10"
@@ -1321,10 +1321,10 @@
                     <div class="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-[#0e1726]">
                         <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                             <a href="index-2.html" class="main-logo flex shrink-0 items-center">
-                                <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="assets/images/logo.svg"
+                                <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" style="width: 100px" src="{{ asset('assets/images/noor1.png') }}"
                                     alt="image" />
-                                <span
-                                    class="hidden align-middle text-2xl font-semibold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline">VRISTO</span>
+                                {{-- <span
+                                    class="hidden align-middle text-2xl font-semibold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline">Noor</span> --}}
                             </a>
 
                             <a href="javascript:;"
